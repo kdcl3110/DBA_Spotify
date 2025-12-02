@@ -1,0 +1,65 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.manifest
+*.spec
+
+# Virtual Environment
+venv/
+ENV/
+env/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Configuration sensible
+.env
+*.log
+*.pot
+
+# Base de données
+*.db
+*.sqlite
+*.sqlite3
+
+# Fichiers de sortie (optionnel, décommenter si vous ne voulez pas versionner les outputs)
+# data/output/*.xml
+# data/output/*.html
+# data/output/*.dtd
+# data/output/*.txt
+
+# Fichiers temporaires
+*.tmp
+*.bak
+*.cache
+
+# OS
+Thumbs.db
+desktop.ini
+
+# Oracle
+*.dmp
+*.log

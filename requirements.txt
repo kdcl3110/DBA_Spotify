@@ -1,0 +1,6 @@
+# Manipulation de données
+pandas>=2.0.0
+# Connexion Oracle Database
+oracledb>=2.0.0
+# Traitement XML/DTD/XSLT (REQUIS pour Phase 2+)
+lxml>=6.0.2
