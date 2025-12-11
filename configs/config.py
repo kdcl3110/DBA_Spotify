@@ -32,11 +32,3 @@ HTML_OUTPUT_PATH = "./data/output/spotify_data.html"
 # --- Fichiers XSLT pour JSON et JSON de sortie ---
 XSLT_JSON_PATH = "./data/input/spotify_to_json.xslt"
 JSON_OUTPUT_PATH = "./data/output/spotify_data.json"
-
-
-# $env:DB_USER="spotify_prod_user"
-# $env:DB_PASSWORD="MonMotDePasseSuperSecurise123"
-# $env:DB_DSN="votre_serveur_oracle:1521/pdb1"
-
-# # Vérifiez que c'est bien défini (facultatif)
-# echo $env:DB_USER

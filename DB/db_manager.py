@@ -1,7 +1,7 @@
 # Fichier : db_manager.py
 
 import oracledb
-from configs import DB_USER, DB_PASSWORD, DB_DSN
+from configs.config import DB_USER, DB_PASSWORD, DB_DSN
 from .db_schema import CREATE_TABLES_SQL, DROP_TABLES_SQL
 import pandas as pd
 from datetime import datetime

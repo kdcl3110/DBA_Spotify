@@ -141,7 +141,7 @@ const PlaylistsGrid = ({ playlists }) => {
                 >
                   <span style={{ fontSize: '13px', color: '#999' }}>
                     <SoundOutlined style={{ marginRight: '4px' }} />
-                    {/* Tracks */}
+                    Tracks
                   </span>
                   <span
                     style={{

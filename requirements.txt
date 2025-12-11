@@ -2,13 +2,7 @@
 pandas>=2.0.0
 # Connexion Oracle Database
 oracledb>=2.0.0
-# Traitement XML/DTD/XSLT (REQUIS pour Phase 2+)
+# Traitement XML/DTD/XSLT
 lxml>=6.0.2
-# Connexion MongoDB (REQUIS pour Pipeline 2)
+# Connexion MongoDB
 pymongo>=4.0.0
-# Jupyter Notebook (OPTIONNEL - pour documentation interactive)
-jupyter>=1.0.0
-notebook>=6.5.0
-# Visualisation de données (OPTIONNEL - pour analyse dans Jupyter)
-matplotlib>=3.5.0
-seaborn>=0.12.0

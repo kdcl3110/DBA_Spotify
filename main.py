@@ -22,9 +22,9 @@ from DB.mongodb_manager import MongoDBManager
 from services.data_processor import preprocess_csv
 from services.xml_exporter import export_to_xml, validate_xml_structure
 from services.dtd_validator import validate_xml_with_dtd
-from services.dtd_creator import create_spotify_dtd, print_dtd_info, generate_dtd_documentation
+from services.dtd_creator import create_spotify_dtd, generate_dtd_documentation
 from services.xslt_transformer import transform_to_html
-from services.xsd_validator import validate_xml_with_xsd, print_validation_report
+from services.xsd_validator import validate_xml_with_xsd
 from services.xsd_creator import create_spotify_xsd, generate_xsd_documentation
 from services.json_converter import convert_xml_to_json
 
@@ -155,20 +155,7 @@ def run_ingestion_process(initialize=False, drop_first=False):
             print("⚠️  Aucune donnée à exporter vers XML.")
         else:
             print(f"✅ {len(xml_data)} enregistrements prêts pour l'export XML.\n")
-            
-            # ==============================================
-            # ÉTAPES SUIVANTES DU PIPELINE
-            # ==============================================
-            print_banner("ÉTAPES SUIVANTES DU PIPELINE", "-")
-            print("📝 Pipeline complet :")
-            print("  1. ✅ Extraction CSV")
-            print("  2. ✅ Insertion Oracle")
-            print("  3. ✅ Génération XML")
-            print("  4. ✅ Création DTD")
-            print("  5. ✅ Validation DTD")
-            print("  6. ⏳ Transformation XSLT → HTML")
-            print()
-            
+           
             # Décommenter quand les modules seront créés :
             print("🔄 Génération du fichier XML...")
             xml_file = export_to_xml(xml_data)

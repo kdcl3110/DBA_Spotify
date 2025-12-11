@@ -152,7 +152,7 @@ function App() {
               color: '#666',
               marginTop: '5px'
             }}>
-              DBA & chnage de données
+              DBA & change de données
             </div>
           </div>
         </Header>

@@ -1,12 +1,9 @@
 import React from 'react';
-import { Card, Row, Col, Statistic } from 'antd';
+import { Card, Row, Col } from 'antd';
 import {
   UnorderedListOutlined,
   CustomerServiceOutlined,
-  BarChartOutlined,
-  ThunderboltOutlined,
-  SmileOutlined,
-  SoundOutlined
+  BarChartOutlined
 } from '@ant-design/icons';
 
 const StatCard = ({ stats }) => {
@@ -34,30 +31,6 @@ const StatCard = ({ stats }) => {
       bgColor: '#FAF5FF',
     },
   ];
-
-  const audioFeaturesData = stats.avgAudioFeatures ? [
-    {
-      title: 'Avg Energy',
-      value: (stats.avgAudioFeatures.energy * 100).toFixed(1),
-      suffix: '%',
-      icon: <ThunderboltOutlined style={{ fontSize: '24px' }} />,
-      color: '#DC2626',
-    },
-    {
-      title: 'Avg Danceability',
-      value: (stats.avgAudioFeatures.danceability * 100).toFixed(1),
-      suffix: '%',
-      icon: <SoundOutlined style={{ fontSize: '24px' }} />,
-      color: '#2563EB',
-    },
-    {
-      title: 'Avg Valence',
-      value: (stats.avgAudioFeatures.valence * 100).toFixed(1),
-      suffix: '%',
-      icon: <SmileOutlined style={{ fontSize: '24px' }} />,
-      color: '#CA8A04',
-    },
-  ] : [];
 
   return (
     <>
@@ -97,29 +70,6 @@ const StatCard = ({ stats }) => {
           </Col>
         ))}
       </Row>
-
-      {/* Audio Features Row */}
-      {/* {audioFeaturesData.length > 0 && (
-        <Row gutter={[24, 24]} style={{ marginTop: '24px' }}>
-          {audioFeaturesData.map((stat, index) => (
-            <Col xs={24} sm={8} key={index}>
-              <Card bordered={false} style={{ borderRadius: '12px' }}>
-                <Statistic
-                  title={
-                    <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <span style={{ color: stat.color }}>{stat.icon}</span>
-                      {stat.title}
-                    </span>
-                  }
-                  value={stat.value}
-                  suffix={stat.suffix}
-                  valueStyle={{ color: stat.color, fontWeight: 'bold' }}
-                />
-              </Card>
-            </Col>
-          ))}
-        </Row>
-      )} */}
     </>
   );
 };
