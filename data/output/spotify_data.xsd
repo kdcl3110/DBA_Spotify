@@ -1,0 +1,93 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0">
+  <xs:element name="spotify_data">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="comment" minOccurs="0">
+          <xs:simpleType>
+            <xs:restriction base="xs:string"/>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element ref="playlists"/>
+      </xs:sequence>
+      <xs:attribute name="generated_at" type="xs:string" use="required"/>
+      <xs:attribute name="total_playlists" type="xs:integer" use="required"/>
+      <xs:attribute name="total_tracks" type="xs:integer" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="playlists">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="playlist" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="playlist">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="nom" type="xs:string"/>
+        <xs:element name="genre" type="xs:string"/>
+        <xs:element name="subgenre" type="xs:string"/>
+        <xs:element ref="tracks"/>
+      </xs:sequence>
+      <xs:attribute name="id" type="xs:string" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="tracks">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="track" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+      <xs:attribute name="count" type="xs:integer" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="track">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="name" type="xs:string"/>
+        <xs:element ref="duration"/>
+        <xs:element name="popularity" type="xs:integer"/>
+        <xs:element ref="album"/>
+        <xs:element ref="artist"/>
+        <xs:element ref="audio_features"/>
+      </xs:sequence>
+      <xs:attribute name="id" type="xs:string" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="duration">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute name="ms" type="xs:integer" use="required"/>
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="album">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="name" type="xs:string"/>
+        <xs:element name="release_date" type="xs:string"/>
+      </xs:sequence>
+      <xs:attribute name="id" type="xs:string" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="artist">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="name" type="xs:string"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="audio_features">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="energy" type="xs:decimal"/>
+        <xs:element name="tempo" type="xs:decimal"/>
+        <xs:element name="danceability" type="xs:decimal"/>
+        <xs:element name="loudness" type="xs:decimal"/>
+        <xs:element name="valence" type="xs:decimal"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

@@ -1,0 +1,81 @@
+================================================================================
+DOCUMENTATION DU SCHÉMA XSD - Données Spotify
+================================================================================
+
+Ce schéma XSD définit la structure et les types de données pour
+l'export XML des données Spotify.
+
+================================================================================
+STRUCTURE HIÉRARCHIQUE
+================================================================================
+
+spotify_data (@generated_at, @total_playlists, @total_tracks)
+│
+└── playlists
+    │
+    └── playlist* (@id)
+        ├── nom (string)
+        ├── genre (string)
+        ├── subgenre (string)
+        │
+        └── tracks (@count)
+            │
+            └── track* (@id)
+                ├── name (string)
+                ├── duration (@ms) (string)
+                ├── popularity (integer)
+                ├── album (@id)
+                │   ├── name (string)
+                │   └── release_date (string)
+                ├── artist
+                │   └── name (string)
+                └── audio_features
+                    ├── energy (decimal)
+                    ├── tempo (decimal)
+                    ├── danceability (decimal)
+                    ├── loudness (decimal)
+                    └── valence (decimal)
+
+Légende : * = peut se répéter (0 à n occurrences)
+          @ = attribut
+
+================================================================================
+DÉFINITIONS DES TYPES
+================================================================================
+
+Types de données utilisés :
+  • xs:string  : Chaîne de caractères
+  • xs:integer : Nombre entier
+  • xs:decimal : Nombre décimal
+
+================================================================================
+CONTRAINTES
+================================================================================
+
+Attributs obligatoires (use='required') :
+  • spotify_data/@generated_at
+  • spotify_data/@total_playlists
+  • spotify_data/@total_tracks
+  • playlist/@id
+  • tracks/@count
+  • track/@id
+  • duration/@ms
+  • album/@id
+
+Cardinalités :
+  • playlists : 1 occurrence exactement
+  • playlist : 0 à n occurrences
+  • tracks : 1 par playlist
+  • track : 0 à n par playlist
+
+================================================================================
+EXEMPLE D'UTILISATION
+================================================================================
+
+Pour valider un fichier XML avec ce schéma XSD :
+
+  python -c "from services.xsd_validator import print_validation_report; \
+             print_validation_report('./data/output/spotify_data_export.xml', \
+                                    './data/output/spotify_data.xsd')"
+
+================================================================================

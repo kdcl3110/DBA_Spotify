@@ -18,11 +18,21 @@ from pathlib import Path
 
 # Imports des modules du projet
 from DB.db_manager import DatabaseManager
+from DB.mongodb_manager import MongoDBManager
 from services.data_processor import preprocess_csv
 from services.xml_exporter import export_to_xml, validate_xml_structure
 from services.dtd_validator import validate_xml_with_dtd
 from services.dtd_creator import create_spotify_dtd, print_dtd_info, generate_dtd_documentation
 from services.xslt_transformer import transform_to_html
+from services.xsd_validator import validate_xml_with_xsd, print_validation_report
+from services.xsd_creator import create_spotify_xsd, generate_xsd_documentation
+from services.json_converter import convert_xml_to_json
+
+# Imports de configuration
+from configs.config import (
+    XML_OUTPUT_PATH, XSD_PATH, XSLT_JSON_PATH, JSON_OUTPUT_PATH,
+    MONGO_HOST, MONGO_PORT, MONGO_DATABASE
+)
 
 
 def print_banner(text, char="="):
@@ -253,12 +263,12 @@ def run_xml_export_only():
 def test_connection():
     """Teste uniquement la connexion à la base de données."""
     print_banner("🔌 TEST DE CONNEXION ORACLE 🔌")
-    
+
     db_manager = DatabaseManager()
-    
+
     if db_manager.connect():
         print("✅ Connexion réussie !")
-        
+
         # Test de requête simple
         try:
             stats = db_manager.get_statistics()
@@ -270,11 +280,208 @@ def test_connection():
                 print("\nℹ️  Aucune table détectée (base vide ou non initialisée).")
         except:
             print("\nℹ️  Impossible de récupérer les statistiques (tables non créées).")
-        
+
         db_manager.close()
         return True
     else:
         print("❌ Échec de la connexion.")
+        return False
+
+
+def run_mongodb_pipeline():
+    """
+    Exécute le pipeline complet : XML → XSD validation → XSLT → JSON → MongoDB
+
+    Pipeline :
+    1. Génération du schéma XSD
+    2. Validation du XML avec le XSD
+    3. Transformation XSLT : XML → JSON
+    4. Insertion du JSON dans MongoDB
+
+    Returns:
+        bool: True si le processus s'est terminé avec succès
+    """
+    print_banner("🍃 PIPELINE XML → XSD → JSON → MONGODB 🍃")
+
+    try:
+        # ==============================================
+        # ÉTAPE 1 : VÉRIFICATION DU FICHIER XML
+        # ==============================================
+        print_banner("ÉTAPE 1 : VÉRIFICATION DU FICHIER XML", "-")
+
+        xml_file = Path(XML_OUTPUT_PATH)
+
+        if not xml_file.exists():
+            print(f"❌ Fichier XML introuvable : {XML_OUTPUT_PATH}")
+            print("💡 Exécutez d'abord : python main.py --full-reset")
+            print("   pour générer le fichier XML depuis Oracle")
+            return False
+
+        print(f"✅ Fichier XML trouvé : {XML_OUTPUT_PATH}\n")
+
+        # ==============================================
+        # ÉTAPE 2 : GÉNÉRATION DU SCHÉMA XSD
+        # ==============================================
+        print_banner("ÉTAPE 2 : GÉNÉRATION DU SCHÉMA XSD", "-")
+
+        success = create_spotify_xsd(XSD_PATH)
+
+        if not success:
+            print("❌ Échec de la génération du schéma XSD")
+            return False
+
+        # Générer la documentation XSD
+        generate_xsd_documentation(XSD_PATH)
+
+        print("✅ Schéma XSD créé avec succès.\n")
+
+        # ==============================================
+        # ÉTAPE 3 : VALIDATION XML AVEC XSD
+        # ==============================================
+        print_banner("ÉTAPE 3 : VALIDATION XML AVEC XSD", "-")
+
+        is_valid, errors = validate_xml_with_xsd(XML_OUTPUT_PATH, XSD_PATH)
+
+        if not is_valid:
+            print(f"\n❌ Le fichier XML n'est pas conforme au schéma XSD")
+            print(f"   {len(errors)} erreur(s) détectée(s)")
+            return False
+
+        print("✅ Validation XSD réussie.\n")
+
+        # ==============================================
+        # ÉTAPE 4 : TRANSFORMATION XSLT : XML → JSON
+        # ==============================================
+        print_banner("ÉTAPE 4 : TRANSFORMATION XML → JSON", "-")
+
+        success, json_data = convert_xml_to_json(
+            XML_OUTPUT_PATH,
+            XSLT_JSON_PATH,
+            JSON_OUTPUT_PATH
+        )
+
+        if not success or not json_data:
+            print("❌ Échec de la conversion XML → JSON")
+            return False
+
+        print("✅ Conversion JSON réussie.\n")
+
+        # ==============================================
+        # ÉTAPE 5 : CONNEXION À MONGODB
+        # ==============================================
+        print_banner("ÉTAPE 5 : CONNEXION À MONGODB", "-")
+
+        mongo_manager = MongoDBManager(
+            host=MONGO_HOST,
+            port=MONGO_PORT,
+            database=MONGO_DATABASE
+        )
+
+        if not mongo_manager.connect():
+            print("❌ Impossible de se connecter à MongoDB")
+            print(f"💡 Vérifiez que MongoDB est démarré sur {MONGO_HOST}:{MONGO_PORT}")
+            return False
+
+        print("✅ Connexion MongoDB établie.\n")
+
+        try:
+            # ==============================================
+            # ÉTAPE 6 : INSERTION DANS MONGODB
+            # ==============================================
+            print_banner("ÉTAPE 6 : INSERTION DANS MONGODB", "-")
+
+            success, count = mongo_manager.insert_spotify_playlists(
+                json_data,
+                clear_first=True
+            )
+
+            if not success:
+                print("❌ Échec de l'insertion dans MongoDB")
+                return False
+
+            print(f"\n✅ {count} playlists insérées avec succès.\n")
+
+            # ==============================================
+            # ÉTAPE 7 : VÉRIFICATION DES DONNÉES
+            # ==============================================
+            print_banner("ÉTAPE 7 : VÉRIFICATION DES DONNÉES", "-")
+
+            # Récupérer les statistiques
+            stats = mongo_manager.get_collection_stats('playlists')
+
+            if stats:
+                print("\n📊 Récapitulatif :")
+                print("-" * 70)
+                print(f"  • Base de données    : {MONGO_DATABASE}")
+                print(f"  • Collection         : playlists")
+                print(f"  • Documents insérés  : {count}")
+                print(f"  • Taille totale      : {stats['size']/1024:.2f} KB")
+                print("-" * 70 + "\n")
+
+            # Afficher quelques exemples
+            print("📋 Exemples de playlists insérées :")
+            print("-" * 70)
+
+            playlists = mongo_manager.query_playlists(limit=3)
+
+            for i, playlist in enumerate(playlists, 1):
+                print(f"\n  {i}. {playlist.get('nom', 'N/A')}")
+                print(f"     • Genre : {playlist.get('genre', 'N/A')}")
+                print(f"     • Subgenre : {playlist.get('subgenre', 'N/A')}")
+                print(f"     • Tracks : {len(playlist.get('tracks', []))}")
+
+            print("\n" + "-" * 70 + "\n")
+
+            print_banner("✅ PIPELINE MONGODB TERMINÉ AVEC SUCCÈS ✅")
+
+            return True
+
+        finally:
+            # Fermeture de la connexion MongoDB
+            mongo_manager.close()
+
+    except KeyboardInterrupt:
+        print("\n\n⚠️  Processus interrompu par l'utilisateur.")
+        return False
+
+    except Exception as e:
+        print(f"\n❌ ERREUR CRITIQUE : {e}")
+        import traceback
+        traceback.print_exc()
+        return False
+
+
+def test_mongodb_connection():
+    """Teste uniquement la connexion à MongoDB."""
+    print_banner("🔌 TEST DE CONNEXION MONGODB 🔌")
+
+    mongo_manager = MongoDBManager(
+        host=MONGO_HOST,
+        port=MONGO_PORT,
+        database=MONGO_DATABASE
+    )
+
+    if mongo_manager.connect():
+        print("✅ Connexion réussie !")
+
+        # Lister les collections
+        try:
+            collections = mongo_manager.db.list_collection_names()
+            if collections:
+                print("\n📊 Collections détectées :")
+                for collection in collections:
+                    count = mongo_manager.db[collection].count_documents({})
+                    print(f"  • {collection} : {count} documents")
+            else:
+                print("\nℹ️  Aucune collection détectée (base vide).")
+        except Exception as e:
+            print(f"\n⚠️  Erreur lors de la récupération des collections : {e}")
+
+        mongo_manager.close()
+        return True
+    else:
+        print("❌ Échec de la connexion.")
+        print(f"💡 Vérifiez que MongoDB est démarré sur {MONGO_HOST}:{MONGO_PORT}")
         return False
 
 
@@ -283,25 +490,35 @@ def main():
     Fonction principale avec gestion des arguments en ligne de commande.
     """
     parser = argparse.ArgumentParser(
-        description="Pipeline de données Spotify : CSV → Oracle → XML → HTML",
+        description="Pipeline de données Spotify : CSV → Oracle → XML → HTML & MongoDB",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Exemples d'utilisation :
-  
+
+  PIPELINE 1 : CSV → Oracle → XML → HTML
+  ==========================================
   # Ingestion complète (drop + create + insert)
   python main.py --full-reset
-  
+
   # Ingestion sans suppression des tables
   python main.py --initialize
-  
+
   # Insertion seule (tables déjà créées)
   python main.py
-  
+
   # Export XML uniquement
   python main.py --export-xml
-  
-  # Test de connexion
+
+  # Test de connexion Oracle
   python main.py --test-connection
+
+  PIPELINE 2 : XML → XSD → JSON → MongoDB
+  ==========================================
+  # Pipeline MongoDB complet
+  python main.py --mongodb-pipeline
+
+  # Test de connexion MongoDB
+  python main.py --test-mongodb
         """
     )
     
@@ -328,12 +545,28 @@ Exemples d'utilisation :
         action='store_true',
         help='Teste uniquement la connexion à Oracle'
     )
-    
+
+    parser.add_argument(
+        '--mongodb-pipeline',
+        action='store_true',
+        help='Exécute le pipeline MongoDB : XML → XSD → JSON → MongoDB'
+    )
+
+    parser.add_argument(
+        '--test-mongodb',
+        action='store_true',
+        help='Teste uniquement la connexion à MongoDB'
+    )
+
     args = parser.parse_args()
-    
+
     # Traitement des arguments
     if args.test_connection:
         success = test_connection()
+    elif args.test_mongodb:
+        success = test_mongodb_connection()
+    elif args.mongodb_pipeline:
+        success = run_mongodb_pipeline()
     elif args.export_xml:
         success = run_xml_export_only()
     elif args.full_reset:

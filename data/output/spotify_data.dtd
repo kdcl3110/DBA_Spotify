@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    DTD pour les données Spotify
+    Généré automatiquement le 2025-12-04 10:33:54
+    
+    Structure :
+    - spotify_data (racine)
+      └─ playlists
+          └─ playlist (multiple)
+              ├─ nom
+              ├─ genre
+              ├─ subgenre
+              └─ tracks
+                  └─ track (multiple)
+                      ├─ name
+                      ├─ duration
+                      ├─ popularity
+                      ├─ album
+                      │   ├─ name
+                      │   └─ release_date (optionnel)
+                      ├─ artist
+                      │   └─ name
+                      └─ audio_features (optionnel)
+                          ├─ energy
+                          ├─ tempo
+                          ├─ danceability
+                          ├─ loudness
+                          └─ valence
+-->
+
+<!-- ========================================================================== -->
+<!-- ÉLÉMENT RACINE                                                             -->
+<!-- ========================================================================== -->
+
+<!ELEMENT spotify_data (playlists)>
+<!ATTLIST spotify_data
+    generated_at    CDATA #REQUIRED
+    total_playlists CDATA #REQUIRED
+    total_tracks    CDATA #REQUIRED
+>
+
+<!-- ========================================================================== -->
+<!-- PLAYLISTS                                                                  -->
+<!-- ========================================================================== -->
+
+<!ELEMENT playlists (playlist+)>
+
+<!ELEMENT playlist (nom, genre, subgenre, tracks)>
+<!ATTLIST playlist
+    id CDATA #REQUIRED
+>
+
+<!ELEMENT nom (#PCDATA)>
+<!ELEMENT genre (#PCDATA)>
+<!ELEMENT subgenre (#PCDATA)>
+
+<!-- ========================================================================== -->
+<!-- TRACKS                                                                     -->
+<!-- ========================================================================== -->
+
+<!ELEMENT tracks (track*)>
+<!ATTLIST tracks
+    count CDATA #REQUIRED
+>
+
+<!ELEMENT track (name, duration, popularity, album, artist, audio_features?)>
+<!ATTLIST track
+    id CDATA #REQUIRED
+>
+
+<!ELEMENT name (#PCDATA)>
+<!ELEMENT duration (#PCDATA)>
+<!ATTLIST duration
+    ms CDATA #REQUIRED
+>
+
+<!ELEMENT popularity (#PCDATA)>
+
+<!-- ========================================================================== -->
+<!-- ALBUM                                                                      -->
+<!-- ========================================================================== -->
+
+<!ELEMENT album (name, release_date?)>
+<!ATTLIST album
+    id CDATA #REQUIRED
+>
+
+<!ELEMENT release_date (#PCDATA)>
+
+<!-- ========================================================================== -->
+<!-- ARTIST                                                                     -->
+<!-- ========================================================================== -->
+
+<!ELEMENT artist (name)>
+
+<!-- ========================================================================== -->
+<!-- AUDIO FEATURES                                                             -->
+<!-- ========================================================================== -->
+
+<!ELEMENT audio_features (energy?, tempo?, danceability?, loudness?, valence?, liveness?, speechiness?, acousticness?, instrumentalness?)>
+
+<!ELEMENT energy (#PCDATA)>
+<!ELEMENT tempo (#PCDATA)>
+<!ELEMENT danceability (#PCDATA)>
+<!ELEMENT loudness (#PCDATA)>
+<!ELEMENT valence (#PCDATA)>
+<!ELEMENT liveness (#PCDATA)>
+<!ELEMENT speechiness (#PCDATA)>
+<!ELEMENT acousticness (#PCDATA)>
+<!ELEMENT instrumentalness (#PCDATA)>
