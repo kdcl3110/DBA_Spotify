@@ -99,7 +99,7 @@ const StatCard = ({ stats }) => {
       </Row>
 
       {/* Audio Features Row */}
-      {audioFeaturesData.length > 0 && (
+      {/* {audioFeaturesData.length > 0 && (
         <Row gutter={[24, 24]} style={{ marginTop: '24px' }}>
           {audioFeaturesData.map((stat, index) => (
             <Col xs={24} sm={8} key={index}>
@@ -119,7 +119,7 @@ const StatCard = ({ stats }) => {
             </Col>
           ))}
         </Row>
-      )}
+      )} */}
     </>
   );
 };

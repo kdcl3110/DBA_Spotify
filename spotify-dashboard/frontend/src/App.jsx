@@ -152,7 +152,7 @@ function App() {
               color: '#666',
               marginTop: '5px'
             }}>
-              Real-time data visualization dashboard
+              DBA & chnage de données
             </div>
           </div>
         </Header>
@@ -205,22 +205,6 @@ function App() {
           </div>
         </Content>
 
-        {/* Footer */}
-        <div style={{
-          textAlign: 'center',
-          padding: '24px',
-          color: 'white',
-          fontSize: '14px',
-          background: 'rgba(255, 255, 255, 0.1)',
-          backdropFilter: 'blur(10px)'
-        }}>
-          <div style={{ fontWeight: '500' }}>
-            Spotify Analytics Dashboard
-          </div>
-          <div style={{ fontSize: '12px', marginTop: '4px', opacity: 0.8 }}>
-            Built with React, Ant Design, and MongoDB
-          </div>
-        </div>
       </Layout>
     </ConfigProvider>
   );

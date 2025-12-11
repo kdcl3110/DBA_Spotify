@@ -1,8 +1,21 @@
-import React from 'react';
-import { Card, Row, Col, Tag, Empty, Badge } from 'antd';
-import { AppstoreOutlined, PlayCircleOutlined, SoundOutlined } from '@ant-design/icons';
+import React, { useState } from 'react';
+import { Card, Row, Col, Tag, Empty, Badge, Modal, List, Avatar } from 'antd';
+import { AppstoreOutlined, PlayCircleOutlined, SoundOutlined, UserOutlined, ClockCircleOutlined } from '@ant-design/icons';
 
 const PlaylistsGrid = ({ playlists }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedPlaylist, setSelectedPlaylist] = useState(null);
+
+  const handlePlaylistClick = (playlist) => {
+    setSelectedPlaylist(playlist);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedPlaylist(null);
+  };
+
   if (!playlists || playlists.length === 0) {
     return (
       <Card
@@ -61,11 +74,13 @@ const PlaylistsGrid = ({ playlists }) => {
               <Card
                 hoverable
                 bordered={false}
+                onClick={() => handlePlaylistClick(playlist)}
                 style={{
                   borderRadius: '12px',
                   background: 'white',
                   border: '1px solid #e8e8e8',
                   height: '100%',
+                  cursor: 'pointer',
                 }}
                 bodyStyle={{ padding: '16px' }}
               >
@@ -126,7 +141,7 @@ const PlaylistsGrid = ({ playlists }) => {
                 >
                   <span style={{ fontSize: '13px', color: '#999' }}>
                     <SoundOutlined style={{ marginRight: '4px' }} />
-                    Tracks
+                    {/* Tracks */}
                   </span>
                   <span
                     style={{
@@ -143,6 +158,126 @@ const PlaylistsGrid = ({ playlists }) => {
           );
         })}
       </Row>
+
+      {/* Modal for Playlist Tracks */}
+      <Modal
+        title={
+          selectedPlaylist ? (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <PlayCircleOutlined style={{ fontSize: '24px', color: getGenreColor(selectedPlaylist.genre).color }} />
+              <div>
+                <div style={{ fontSize: '18px', fontWeight: '600' }}>{selectedPlaylist.nom}</div>
+                <div style={{ fontSize: '13px', color: '#999', fontWeight: 'normal' }}>
+                  {selectedPlaylist.tracks?.length || selectedPlaylist.tracks_count || 0} tracks
+                </div>
+              </div>
+            </div>
+          ) : 'Playlist Details'
+        }
+        open={isModalOpen}
+        onCancel={handleCloseModal}
+        footer={null}
+        width={700}
+        style={{ top: 20 }}
+      >
+        {selectedPlaylist && (
+          <div>
+            {/* Playlist Info */}
+            <div style={{ marginBottom: '20px', display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+              <Tag
+                style={{
+                  borderRadius: '6px',
+                  padding: '4px 12px',
+                  background: getGenreColor(selectedPlaylist.genre).bg,
+                  color: getGenreColor(selectedPlaylist.genre).color,
+                  border: `1px solid ${getGenreColor(selectedPlaylist.genre).border}`,
+                }}
+              >
+                {selectedPlaylist.genre}
+              </Tag>
+              {selectedPlaylist.subgenre && (
+                <Tag
+                  style={{
+                    borderRadius: '6px',
+                    padding: '4px 12px',
+                    background: '#f0f0f0',
+                    color: '#666',
+                    border: '1px solid #E8E8E8',
+                  }}
+                >
+                  {selectedPlaylist.subgenre}
+                </Tag>
+              )}
+            </div>
+
+            {/* Tracks List */}
+            {selectedPlaylist.tracks && selectedPlaylist.tracks.length > 0 ? (
+              <List
+                dataSource={selectedPlaylist.tracks}
+                style={{ maxHeight: '500px', overflowY: 'auto' }}
+                renderItem={(track, index) => (
+                  <List.Item
+                    style={{
+                      padding: '12px 16px',
+                      borderRadius: '8px',
+                      marginBottom: '8px',
+                      background: index % 2 === 0 ? '#FAFAFA' : 'white',
+                    }}
+                  >
+                    <List.Item.Meta
+                      avatar={
+                        <Avatar
+                          style={{
+                            background: getGenreColor(selectedPlaylist.genre).color,
+                            color: 'white',
+                            fontWeight: '600',
+                          }}
+                        >
+                          {index + 1}
+                        </Avatar>
+                      }
+                      title={
+                        <div style={{ fontWeight: '500', fontSize: '14px', color: '#333' }}>
+                          {track.name || track.titre || 'Unknown Track'}
+                        </div>
+                      }
+                      description={
+                        <div style={{ fontSize: '13px', color: '#666', display: 'flex', alignItems: 'center', gap: '12px' }}>
+                          <span>
+                            <UserOutlined style={{ marginRight: '4px' }} />
+                            {track.artist?.name || track.artiste || 'Unknown Artist'}
+                          </span>
+                          {track.duration_ms && (
+                            <span>
+                              <ClockCircleOutlined style={{ marginRight: '4px' }} />
+                              {Math.floor(track.duration_ms / 60000)}:{String(Math.floor((track.duration_ms % 60000) / 1000)).padStart(2, '0')}
+                            </span>
+                          )}
+                        </div>
+                      }
+                    />
+                    {track.popularity !== undefined && (
+                      <Tag
+                        style={{
+                          background: track.popularity >= 70 ? '#DC2626' : track.popularity >= 50 ? '#EA580C' : '#CA8A04',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '6px',
+                          fontWeight: '600',
+                        }}
+                      >
+                        {track.popularity}
+                      </Tag>
+                    )}
+                  </List.Item>
+                )}
+              />
+            ) : (
+              <Empty description="No tracks available" />
+            )}
+          </div>
+        )}
+      </Modal>
     </Card>
   );
 };
