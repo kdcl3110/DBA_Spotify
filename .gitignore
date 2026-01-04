@@ -46,10 +46,10 @@ env/
 *.sqlite3
 
 # Fichiers de sortie (optionnel, décommenter si vous ne voulez pas versionner les outputs)
-# data/output/*.xml
-# data/output/*.html
-# data/output/*.dtd
-# data/output/*.txt
+data/output/*.xml
+data/output/*.html
+data/output/*.dtd
+data/output/*.txt
 
 # Fichiers temporaires
 *.tmp

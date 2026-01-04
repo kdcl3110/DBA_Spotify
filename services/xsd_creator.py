@@ -18,7 +18,7 @@ def create_spotify_xsd(xsd_file="./data/output/spotify_data.xsd"):
     Returns:
         bool: True si succès, False sinon
     """
-    print(f"\n📋 Création du schéma XSD...")
+    print(f"\n Création du schéma XSD...")
     print(f"📄 Fichier de sortie : {xsd_file}")
 
     try:
@@ -136,8 +136,8 @@ def create_spotify_xsd(xsd_file="./data/output/spotify_data.xsd"):
         with open(xsd_file, 'wb') as f:
             tree.write(f, pretty_print=True, xml_declaration=True, encoding='UTF-8')
 
-        print(f"✅ Schéma XSD créé avec succès !")
-        print(f"📋 Fichier : {xsd_file}")
+        print(f" Schéma XSD créé avec succès !")
+        print(f" Fichier : {xsd_file}")
 
         # Afficher des statistiques
         print_xsd_info(xsd_file)
@@ -145,7 +145,7 @@ def create_spotify_xsd(xsd_file="./data/output/spotify_data.xsd"):
         return True
 
     except Exception as e:
-        print(f"\n❌ Erreur lors de la création du schéma XSD : {e}")
+        print(f"\n Erreur lors de la création du schéma XSD : {e}")
         import traceback
         traceback.print_exc()
         return False
@@ -175,7 +175,7 @@ def print_xsd_info(xsd_file):
         print(f"   • Types complexes     : {len(complex_types)}")
         print(f"   • Attributs           : {len(attributes)}")
 
-        print(f"\n📋 Éléments principaux :")
+        print(f"\n Éléments principaux :")
         for elem in elements:
             name = elem.get('name')
             elem_type = elem.get('type', 'complexType')
@@ -186,7 +186,7 @@ def print_xsd_info(xsd_file):
         print(f"\n📦 Taille du fichier : {file_size} bytes ({file_size/1024:.2f} KB)")
 
     except Exception as e:
-        print(f"❌ Erreur lors de l'affichage des informations : {e}")
+        print(f" Erreur lors de l'affichage des informations : {e}")
 
 
 def generate_xsd_documentation(xsd_file, doc_file="./data/output/XSD_DOCUMENTATION.txt"):
@@ -290,11 +290,11 @@ def generate_xsd_documentation(xsd_file, doc_file="./data/output/XSD_DOCUMENTATI
         with open(doc_file, 'w', encoding='utf-8') as f:
             f.write('\n'.join(doc_content))
 
-        print(f"✅ Documentation générée : {doc_file}")
+        print(f" Documentation générée : {doc_file}")
         return True
 
     except Exception as e:
-        print(f"❌ Erreur lors de la génération de la documentation : {e}")
+        print(f" Erreur lors de la génération de la documentation : {e}")
         return False
 
 
@@ -312,10 +312,10 @@ if __name__ == "__main__":
         generate_xsd_documentation(xsd_file)
 
         print("\n" + "=" * 70)
-        print("✅ Schéma XSD et documentation créés avec succès !")
+        print(" Schéma XSD et documentation créés avec succès !")
         print("=" * 70)
-        print(f"\n📋 Fichiers générés :")
+        print(f"\n Fichiers générés :")
         print(f"   • {xsd_file}")
         print(f"   • ./data/output/XSD_DOCUMENTATION.txt")
     else:
-        print("\n❌ Échec de la création du schéma XSD")
+        print("\n Échec de la création du schéma XSD")

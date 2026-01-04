@@ -58,14 +58,14 @@ class MongoDBManager:
             return True
 
         except ConnectionFailure as e:
-            print(f"❌ Erreur de connexion à MongoDB : {e}")
+            print(f"Erreur de connexion à MongoDB : {e}")
             print(f"💡 Vérifiez que MongoDB est démarré sur {self.host}:{self.port}")
             self.client = None
             self.db = None
             return False
 
         except Exception as e:
-            print(f"❌ Erreur inattendue lors de la connexion : {e}")
+            print(f"Erreur inattendue lors de la connexion : {e}")
             self.client = None
             self.db = None
             return False
@@ -77,7 +77,7 @@ class MongoDBManager:
                 self.client.close()
                 print("✅ Connexion à MongoDB fermée.")
             except Exception as e:
-                print(f"⚠️  Erreur lors de la fermeture : {e}")
+                print(f"Erreur lors de la fermeture : {e}")
             finally:
                 self.client = None
                 self.db = None
@@ -106,7 +106,7 @@ class MongoDBManager:
             print("✅ Connexion MongoDB active.")
             return True
         except Exception as e:
-            print(f"❌ Connexion MongoDB inactive : {e}")
+            print(f"Connexion MongoDB inactive : {e}")
             return False
 
     def drop_collection(self, collection_name):
@@ -120,7 +120,7 @@ class MongoDBManager:
             bool: True si succès
         """
         if self.db is None:
-            print("❌ Pas de connexion active à MongoDB.")
+            print("Pas de connexion active à MongoDB.")
             return False
 
         try:
@@ -128,7 +128,7 @@ class MongoDBManager:
             print(f"✅ Collection '{collection_name}' supprimée.")
             return True
         except Exception as e:
-            print(f"❌ Erreur lors de la suppression de la collection : {e}")
+            print(f"Erreur lors de la suppression de la collection : {e}")
             return False
 
     def insert_json_data(self, collection_name, json_data, clear_first=False):
@@ -144,7 +144,7 @@ class MongoDBManager:
             tuple: (bool: succès, int: nombre de documents insérés)
         """
         if self.db is None:
-            print("❌ Pas de connexion active à MongoDB.")
+            print("Pas de connexion active à MongoDB.")
             return False, 0
 
         print(f"\n💾 Insertion dans MongoDB...")
@@ -155,7 +155,7 @@ class MongoDBManager:
 
             # Supprimer la collection si demandé
             if clear_first:
-                print(f"   ⚠️  Suppression de la collection existante...")
+                print(f"   Suppression de la collection existante...")
                 collection.drop()
                 collection = self.db[collection_name]
 
@@ -176,7 +176,7 @@ class MongoDBManager:
             elif isinstance(json_data, list):
                 # Si c'est une liste de documents
                 if not json_data:
-                    print("   ⚠️  Aucune donnée à insérer.")
+                    print("   Aucune donnée à insérer.")
                     return True, 0
 
                 result = collection.insert_many(json_data, ordered=False)
@@ -184,7 +184,7 @@ class MongoDBManager:
                 print(f"   ✅ {inserted_count} documents insérés.")
 
             else:
-                print("   ❌ Type de données non supporté. Attendu : dict ou list")
+                print("   Type de données non supporté. Attendu : dict ou list")
                 return False, 0
 
             # Compter les documents après insertion
@@ -194,17 +194,17 @@ class MongoDBManager:
             return True, inserted_count
 
         except DuplicateKeyError as e:
-            print(f"❌ Erreur : Document(s) avec clé dupliquée : {e}")
+            print(f"Erreur : Document(s) avec clé dupliquée : {e}")
             return False, 0
 
         except BulkWriteError as e:
-            print(f"⚠️  Erreur partielle lors de l'insertion en masse :")
+            print(f"Erreur partielle lors de l'insertion en masse :")
             print(f"   Insérés : {e.details.get('nInserted', 0)}")
             print(f"   Erreurs : {len(e.details.get('writeErrors', []))}")
             return False, e.details.get('nInserted', 0)
 
         except Exception as e:
-            print(f"❌ Erreur lors de l'insertion : {e}")
+            print(f"Erreur lors de l'insertion : {e}")
             import traceback
             traceback.print_exc()
             return False, 0
@@ -221,7 +221,7 @@ class MongoDBManager:
             tuple: (bool: succès, int: nombre de playlists insérées)
         """
         if self.db is None:
-            print("❌ Pas de connexion active à MongoDB.")
+            print("Pas de connexion active à MongoDB.")
             return False, 0
 
         print("\n" + "="*70)
@@ -231,16 +231,16 @@ class MongoDBManager:
         try:
             # Extraire les playlists
             if not isinstance(json_data, dict):
-                print("❌ Format JSON invalide. Attendu : dict avec clé 'playlists'")
+                print("Format JSON invalide. Attendu : dict avec clé 'playlists'")
                 return False, 0
 
             playlists = json_data.get('playlists', [])
 
             if not playlists:
-                print("⚠️  Aucune playlist trouvée dans les données JSON.")
+                print("Aucune playlist trouvée dans les données JSON.")
                 return False, 0
 
-            print(f"\n📊 Données à insérer :")
+            print(f"\n Données à insérer :")
             print(f"   • Playlists : {len(playlists)}")
 
             total_tracks = sum(len(p.get('tracks', [])) for p in playlists)
@@ -260,7 +260,7 @@ class MongoDBManager:
                 print("\n" + "="*70)
                 print(" ✅ INSERTION RÉUSSIE")
                 print("="*70)
-                print(f"\n📊 Résumé :")
+                print(f"\n Résumé :")
                 print(f"   • Collection : playlists")
                 print(f"   • Documents insérés : {count}")
                 print(f"   • Tracks totaux : {total_tracks}")
@@ -273,7 +273,7 @@ class MongoDBManager:
                 return False, 0
 
         except Exception as e:
-            print(f"\n❌ Erreur lors de l'insertion des playlists : {e}")
+            print(f"\nErreur lors de l'insertion des playlists : {e}")
             import traceback
             traceback.print_exc()
             return False, 0
@@ -301,7 +301,7 @@ class MongoDBManager:
         except Exception as e:
             # Ne pas afficher d'erreur si l'index existe déjà
             if "already exists" not in str(e).lower():
-                print(f"   ⚠️  Erreur lors de la création de l'index : {e}")
+                print(f"   Erreur lors de la création de l'index : {e}")
             return False
 
     def get_collection_stats(self, collection_name):
@@ -315,7 +315,7 @@ class MongoDBManager:
             dict: Statistiques de la collection
         """
         if self.db is None:
-            print("❌ Pas de connexion active à MongoDB.")
+            print("Pas de connexion active à MongoDB.")
             return None
 
         try:
@@ -328,7 +328,7 @@ class MongoDBManager:
                 'size': self.db.command("collstats", collection_name).get('size', 0)
             }
 
-            print(f"\n📊 Statistiques de la collection '{collection_name}' :")
+            print(f"\n Statistiques de la collection '{collection_name}' :")
             print(f"   • Documents : {stats['count']}")
             print(f"   • Taille : {stats['size']:,} bytes ({stats['size']/1024:.2f} KB)")
             print(f"   • Index : {list(stats['indexes'])}")
@@ -336,7 +336,7 @@ class MongoDBManager:
             return stats
 
         except Exception as e:
-            print(f"❌ Erreur lors de la récupération des statistiques : {e}")
+            print(f"Erreur lors de la récupération des statistiques : {e}")
             return None
 
     def query_playlists(self, filter_query=None, limit=10):
@@ -351,7 +351,7 @@ class MongoDBManager:
             list: Liste des playlists
         """
         if self.db is None:
-            print("❌ Pas de connexion active à MongoDB.")
+            print("Pas de connexion active à MongoDB.")
             return []
 
         try:
@@ -367,7 +367,7 @@ class MongoDBManager:
             return playlists
 
         except Exception as e:
-            print(f"❌ Erreur lors de la requête : {e}")
+            print(f"Erreur lors de la requête : {e}")
             return []
 
 
@@ -418,5 +418,5 @@ if __name__ == "__main__":
                 mongo.drop_collection('playlists')
                 print("\n🧹 Collection de test nettoyée")
         else:
-            print("\n❌ Test de connexion échoué")
+            print("\nTest de connexion échoué")
             print("💡 Assurez-vous que MongoDB est démarré")

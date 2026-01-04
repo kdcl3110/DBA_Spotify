@@ -37,9 +37,9 @@ def transform_to_html(xml_file, xslt_file=None, output_file=None):
         output_file = HTML_OUTPUT_PATH
 
     print(f"\n🔄 Transformation XSLT → HTML...")
-    print(f"📄 Fichier XML   : {xml_file}")
-    print(f"📄 Fichier XSLT  : {xslt_file}")
-    print(f"📄 Fichier HTML  : {output_file}")
+    print(f" Fichier XML   : {xml_file}")
+    print(f" Fichier XSLT  : {xslt_file}")
+    print(f" Fichier HTML  : {output_file}")
 
     try:
         # Vérifier l'existence des fichiers d'entrée
@@ -99,11 +99,11 @@ def transform_to_html(xml_file, xslt_file=None, output_file=None):
         total_playlists = root.get('total_playlists', '0')
         total_tracks = root.get('total_tracks', '0')
 
-        print(f"\n✅ Transformation réussie !")
-        print(f"📄 Fichier généré : {output_file}")
-        print(f"📊 Taille        : {file_size_kb:.2f} KB")
-        print(f"📋 Contenu       : {total_playlists} playlists, {total_tracks} tracks")
-        print(f"\n💡 Ouvrez le fichier dans un navigateur pour visualiser les données.")
+        print(f"\n Transformation réussie !")
+        print(f" Fichier généré : {output_file}")
+        print(f" Taille        : {file_size_kb:.2f} KB")
+        print(f" Contenu       : {total_playlists} playlists, {total_tracks} tracks")
+        print(f"\n Ouvrez le fichier dans un navigateur pour visualiser les données.")
 
         return str(output_path)
 
@@ -138,7 +138,7 @@ def validate_xslt(xslt_file=None):
         xslt_file = XSLT_FILE_PATH
 
     print(f"\n🔍 Validation du fichier XSLT...")
-    print(f"📄 Fichier : {xslt_file}")
+    print(f" Fichier : {xslt_file}")
 
     try:
         xslt_path = Path(xslt_file)
@@ -153,7 +153,7 @@ def validate_xslt(xslt_file=None):
         # Tenter de créer un transformateur (validation complète)
         transform = etree.XSLT(xslt_doc)
 
-        print("✅ Le fichier XSLT est valide.")
+        print(" Le fichier XSLT est valide.")
         return True
 
     except etree.XSLTParseError as e:
@@ -194,10 +194,10 @@ def get_xslt_info(xslt_file=None):
         file_size = xslt_path.stat().st_size
         file_size_kb = file_size / 1024
 
-        print(f"\n📋 Informations XSLT")
+        print(f"\n Informations XSLT")
         print("=" * 60)
-        print(f"📄 Fichier       : {xslt_file}")
-        print(f"📊 Taille        : {file_size_kb:.2f} KB")
+        print(f" Fichier       : {xslt_file}")
+        print(f" Taille        : {file_size_kb:.2f} KB")
         print(f"🔖 Version XSLT  : {root.get('version', 'Non spécifié')}")
 
         # Compter les templates

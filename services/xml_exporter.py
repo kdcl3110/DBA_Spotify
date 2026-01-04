@@ -149,10 +149,9 @@ def create_xml_from_data(data_list, output_path=None):
     # Regrouper les données par playlist
     playlists_data = group_data_by_playlist(data_list)
     
-    print(f"📊 {len(playlists_data)} playlists à exporter")
-    print(f"📊 {len(data_list)} tracks au total")
-    
-    # Créer l'élément racine
+    print(f" {len(playlists_data)} playlists à exporter")
+    print(f"{len(data_list)} tracks au total")
+        # Créer l'élément racine
     root = etree.Element("spotify_data")
     root.set("generated_at", datetime.now().isoformat())
     root.set("total_playlists", str(len(playlists_data)))
@@ -258,10 +257,10 @@ def create_xml_from_data(data_list, output_path=None):
     file_size = output_file.stat().st_size
     file_size_kb = file_size / 1024
     
-    print(f"\n✅ Fichier XML généré avec succès !")
-    print(f"📄 Fichier : {output_path}")
-    print(f"📊 Taille : {file_size_kb:.2f} KB")
-    print(f"📋 Structure :")
+    print(f"\n Fichier XML généré avec succès !")
+    print(f" Fichier : {output_path}")
+    print(f" Taille : {file_size_kb:.2f} KB")
+    print(f" Structure :")
     print(f"   • {len(playlists_data)} playlists")
     print(f"   • {len(data_list)} tracks")
     
@@ -288,7 +287,7 @@ def export_to_xml(data_list, output_path=None):
         return create_xml_from_data(data_list, output_path)
     
     except Exception as e:
-        print(f"❌ Erreur lors de l'export XML : {e}")
+        print(f" Erreur lors de l'export XML : {e}")
         import traceback
         traceback.print_exc()
         return None
@@ -306,12 +305,12 @@ def validate_xml_structure(xml_file):
     """
     try:
         tree = etree.parse(xml_file)
-        print(f"✅ Le fichier XML est bien formé.")
+        print(f" Le fichier XML est bien formé.")
         return True
     except etree.XMLSyntaxError as e:
-        print(f"❌ Erreur de syntaxe XML : {e}")
+        print(f" Erreur de syntaxe XML : {e}")
         return False
     except Exception as e:
-        print(f"❌ Erreur lors de la validation : {e}")
+        print(f" Erreur lors de la validation : {e}")
         return False
 
