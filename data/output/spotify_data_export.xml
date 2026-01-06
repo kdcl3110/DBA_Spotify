@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<spotify_data generated_at="2026-01-04T02:01:54.482127" total_playlists="72" total_tracks="1670">
+<spotify_data generated_at="2026-01-06T09:34:07.936646" total_playlists="72" total_tracks="1670">
   <!-- Données Spotify exportées depuis Oracle Database -->
   <playlists>
     <playlist id="0KmkdDrKlNG5GPuoF0sf3y">
@@ -27818,25 +27818,6 @@
             <valence>0.331</valence>
           </audio_features>
         </track>
-        <track id="2PYlRGF5Wi5sDobsLH5gLX">
-          <name>MANON B</name>
-          <duration ms="169846">02:49</duration>
-          <popularity>71</popularity>
-          <album id="4kaRXOJNgAAa3Odl6ojLBf">
-            <name>MANON B</name>
-            <release_date>2024-08-29</release_date>
-          </album>
-          <artist>
-            <name>tiakola</name>
-          </artist>
-          <audio_features>
-            <energy>0.709</energy>
-            <tempo>130.081</tempo>
-            <danceability>0.872</danceability>
-            <loudness>-7.472</loudness>
-            <valence>0.309</valence>
-          </audio_features>
-        </track>
         <track id="6C0SXfD7rR46MpWK5VJSEw">
           <name>MANON B</name>
           <duration ms="169846">02:49</duration>
@@ -27854,6 +27835,25 @@
             <danceability>0.872</danceability>
             <loudness>-7.472</loudness>
             <valence>0.308</valence>
+          </audio_features>
+        </track>
+        <track id="2PYlRGF5Wi5sDobsLH5gLX">
+          <name>MANON B</name>
+          <duration ms="169846">02:49</duration>
+          <popularity>71</popularity>
+          <album id="4kaRXOJNgAAa3Odl6ojLBf">
+            <name>MANON B</name>
+            <release_date>2024-08-29</release_date>
+          </album>
+          <artist>
+            <name>tiakola</name>
+          </artist>
+          <audio_features>
+            <energy>0.709</energy>
+            <tempo>130.081</tempo>
+            <danceability>0.872</danceability>
+            <loudness>-7.472</loudness>
+            <valence>0.309</valence>
           </audio_features>
         </track>
         <track id="6JCjcuo4VKAP4bHhbHj6fe">

@@ -201,64 +201,8 @@ def convert_xml_to_json(xml_file, xslt_file, json_output_file):
     return True, json_data
 
 
-def pretty_print_json_sample(json_file, num_playlists=2):
-    """
-    Affiche un échantillon du JSON de manière formatée.
-
-    Args:
-        json_file: Chemin du fichier JSON
-        num_playlists: Nombre de playlists à afficher
-    """
-    try:
-        with open(json_file, 'r', encoding='utf-8') as f:
-            data = json.load(f)
-
-        print(f"\n📋 Aperçu du JSON (premières {num_playlists} playlists) :")
-        print("-" * 70)
-
-        sample = {
-            'generated_at': data.get('generated_at'),
-            'total_playlists': data.get('total_playlists'),
-            'total_tracks': data.get('total_tracks'),
-            'playlists': data.get('playlists', [])[:num_playlists]
-        }
-
-        print(json.dumps(sample, indent=2, ensure_ascii=False))
-        print("-" * 70)
-
-    except Exception as e:
-        print(f"❌ Erreur lors de l'affichage : {e}")
-
 
 # Test du module
 if __name__ == "__main__":
     print("🧪 Test du module json_converter")
     print("="*70)
-
-    # Chemins de test
-    xml_file = "./data/output/spotify_data_export.xml"
-    xslt_file = "./data/input/spotify_to_json.xslt"
-    json_file = "./data/output/spotify_data.json"
-
-    # Vérifier que les fichiers existent
-    if not Path(xml_file).exists():
-        print(f"⚠️  Fichier XML de test non trouvé : {xml_file}")
-        print("💡 Exécute d'abord : python main.py --full-reset")
-        sys.exit(1)
-
-    if not Path(xslt_file).exists():
-        print(f"⚠️  Fichier XSLT de test non trouvé : {xslt_file}")
-        print("💡 Le fichier XSLT doit être créé")
-        sys.exit(1)
-
-    # Conversion complète
-    success, json_data = convert_xml_to_json(xml_file, xslt_file, json_file)
-
-    if success:
-        # Afficher un échantillon
-        pretty_print_json_sample(json_file, num_playlists=2)
-
-        print(f"\n✅ Fichier JSON créé : {json_file}")
-    else:
-        print("\n❌ Échec de la conversion")
-        sys.exit(1)
